@@ -10,7 +10,6 @@ import Icon from '../components/Icon.jsx'
 import { Button } from '../components/ui.jsx'
 import { glyphOf } from '../lib/glyphs.js'
 
-// Home = a focused training dashboard. Deep charts & history still live in Stats.
 export default function Home() {
   const nav = useNavigate()
   const S = useStore(s => s.S)
@@ -29,6 +28,7 @@ export default function Home() {
   monday.setDate(today.getDate() - ((today.getDay() + 6) % 7) + weekOffset * 7)
   const doneDays = new Set(S.workouts.map(w => w.d))
   const strip = []
+
   for (let i = 0; i < 7; i++) {
     const d = new Date(monday)
     d.setDate(monday.getDate() + i)
@@ -37,12 +37,13 @@ export default function Home() {
     const ovr = S.dayPlan[iso] !== undefined
     const done = doneDays.has(iso)
     const dot = done ? ' done' : ovr && eff ? ' ovr' : eff ? ' plan' : ''
+
     strip.push(
-      <div key={i} className={'wday' + (iso === todayISO() ? ' today' : '')} onClick={() => dayOverrideSheet(iso)}>
-        <div className="lbl">{t(DAYS[d.getDay()])}</div>
-        <div className="num">{d.getDate()}</div>
-        <div className={'dot' + dot} />
-      </div>
+      <button key={i} className={'wday' + (iso === todayISO() ? ' today' : '')} onClick={() => dayOverrideSheet(iso)}>
+        <span className="lbl">{t(DAYS[d.getDay()])}</span>
+        <span className="num">{d.getDate()}</span>
+        <span className={'dot' + dot} />
+      </button>
     )
   }
 
@@ -62,131 +63,131 @@ export default function Home() {
     else dayOverrideSheet(todayISO())
   }
 
-  const sessionName = S.active
-    ? t('{0} — in progress', S.active.name)
-    : routine
-      ? routine.name
-      : t('Rest day')
+  const sessionName = S.active ? S.active.name : routine ? routine.name : t('Rest day')
+  const sessionAction = S.active ? t('Resume') : routine ? t('Start') : t('Plan')
+  const sessionIcon = S.active ? 'play' : routine ? glyphOf(routine.emoji) : 'plus'
+  const exerciseCount = S.active?.entries?.length ?? routine?.ex?.length ?? 0
+  const dateLabel = today.toLocaleDateString(dateLocale(), { weekday: 'long', day: 'numeric', month: 'long' })
 
-  return <div className="narrow home-page">
-    <section className="home-hero">
-      <div className="home-hero-top">
-        <div className="home-date">{today.toLocaleDateString(dateLocale(), { weekday: 'long', day: 'numeric', month: 'long' })}</div>
-        <button className="iconbtn" onClick={() => nav('/settings')} aria-label={t('Settings')}>
-          <Icon name="gear" />
-        </button>
+  return <div className="narrow home-page zen-home">
+    <header className="zen-home-topbar">
+      <div className="zen-wordmark">
+        <span className="zen-wordmark-mark"><Icon name="dumbbell" /></span>
+        <span>openGym</span>
+      </div>
+      <button className="iconbtn" onClick={() => nav('/settings')} aria-label={t('Settings')}>
+        <Icon name="gear" />
+      </button>
+    </header>
+
+    <section className="zen-greeting">
+      <div className="zen-greeting-kicker">{dateLabel}</div>
+      <h1>{user ? t('Hi {0}', user.name) : t('Ready to train?')}</h1>
+    </section>
+
+    <section className={'zen-training-hero' + (S.active ? ' is-active' : '')}>
+      <div>
+        <div className="zen-session-kicker"><i />{S.active ? t('Workout in progress') : t('Today')}</div>
+        <h2 className="zen-session-title">{sessionName}</h2>
+        <div className="zen-session-sub">
+          {S.active
+            ? t('{0} sets completed so far.', S.active.entries.reduce((n, e) => n + e.sets.filter(s => s.done).length, 0))
+            : routine
+              ? t('Your session is ready. Open it and keep the rest simple.')
+              : t('No workout planned. Use today as recovery or choose a session manually.')}
+        </div>
+        <div className="zen-session-meta">
+          {!!exerciseCount && <span className="zen-tonal-chip"><Icon name="list" />{exerciseCount} {t('Exercises')}</span>}
+          {todayOvr && routine && <span className="zen-tonal-chip"><Icon name="calendar" />{t('rescheduled')}</span>}
+          <span className="zen-tonal-chip"><Icon name="flame" />{t('{0} week streak', streak)}</span>
+        </div>
       </div>
 
-      <h1 className="home-title">{user ? t('Hi {0}', user.name) : 'openGym'}</h1>
-
-      <button className={'home-session' + (S.active ? ' active' : '')} onClick={onToday}>
-        <span className="home-session-main">
-          <span className="home-session-icon">
-            <Icon name={S.active ? 'timer' : routine ? glyphOf(routine.emoji) : 'moon'} />
-          </span>
-          <span className="home-session-copy">
-            <span className="home-session-kicker">{t('Today')}</span>
-            <span className="home-session-name">{sessionName}{todayOvr && routine ? ' · ' + t('rescheduled') : ''}</span>
-          </span>
-        </span>
-        <span className="home-session-action">
-          <span>{S.active ? t('Resume') : routine ? t('Start') : t('Plan')}</span>
-          <Icon name="chevronRight" />
-        </span>
+      <button className={'zen-start-orb' + (S.active ? ' active' : '')} data-label={sessionAction} onClick={onToday} aria-label={sessionAction}>
+        <Icon name={sessionIcon} />
       </button>
     </section>
 
-    <div className="home-metrics">
-      <button className="home-metric" onClick={() => nav('/stats')}>
-        <span className="home-metric-head"><Icon name="dumbbell" /><span>{t('Workouts')}</span></span>
-        <strong>{wThisWeek}{plannedPerWeek ? '/' + plannedPerWeek : ''}</strong>
-        <small>{t('this week')}</small>
+    <section className="zen-glance" aria-label="Training overview">
+      <button className="zen-glance-card" onClick={() => nav('/stats')}>
+        <span className="zen-glance-icon"><Icon name="dumbbell" /></span>
+        <span className="zen-glance-value">{wThisWeek}{plannedPerWeek ? '/' + plannedPerWeek : ''}</span>
+        <span className="zen-glance-label">{t('Workouts')} · {t('this week')}</span>
       </button>
-      <button className="home-metric" onClick={() => calendarSheet()}>
-        <span className="home-metric-head"><Icon name="flame" /><span>{t('Week streak')}</span></span>
-        <strong>{streak}</strong>
-        <small>{t(S.workouts.length === 1 ? '{0} workout total' : '{0} workouts total', S.workouts.length)}</small>
+      <button className="zen-glance-card" onClick={() => calendarSheet()}>
+        <span className="zen-glance-icon"><Icon name="flame" /></span>
+        <span className="zen-glance-value">{streak}</span>
+        <span className="zen-glance-label">{t('Week streak')}</span>
       </button>
-      <button className="home-metric" onClick={() => bwSheet()}>
-        <span className="home-metric-head"><Icon name="scale" /><span>{t('Body weight')}</span></span>
-        <strong>{bw ? `${fmtNum(bw.w)} ${S.unit}` : '—'}</strong>
-        <small>{S.targetW ? `${t('Goal')} ${fmtNum(S.targetW)} ${S.unit}` : t('Log')}</small>
+      <button className="zen-glance-card" onClick={() => bwSheet()}>
+        <span className="zen-glance-icon"><Icon name="scale" /></span>
+        <span className="zen-glance-value">{bw ? fmtNum(bw.w) : '—'}</span>
+        <span className="zen-glance-label">{bw ? S.unit : t('Body weight')}</span>
       </button>
-    </div>
+    </section>
 
     {!S.routines.length && !S.active && (
-      <div className="card">
-        <div className="row" style={{ gap: 10, marginBottom: 7 }}>
+      <section className="card zen-empty-onboarding">
+        <div className="row" style={{ gap: 12, marginBottom: 10 }}>
           <span className="lrow-i"><Icon name="sparkles" /></span>
-          <div className="big" style={{ fontSize: 24 }}>{t('Welcome!')}</div>
+          <div>
+            <div className="big" style={{ fontSize: 24 }}>{t('Welcome!')}</div>
+            <div className="muted small" style={{ marginTop: 3 }}>{t('Set up your weekly routine to get going — or load a ready-made Push / Pull / Legs plan.')}</div>
+          </div>
         </div>
-        <div className="muted small" style={{ marginBottom: 14 }}>{t('Set up your weekly routine to get going — or load a ready-made Push / Pull / Legs plan.')}</div>
-        <Button variant="primary" icon="sparkles" onClick={loadStarterPlan}>{t('Load starter plan (PPL)')}</Button>
-        <div style={{ height: 8 }} />
-        <Button onClick={() => nav('/plan')}>{t('Build my own plan')}</Button>
-      </div>
+        <div className="row" style={{ alignItems: 'stretch', flexWrap: 'wrap' }}>
+          <Button variant="primary" icon="sparkles" onClick={loadStarterPlan}>{t('Load starter plan (PPL)')}</Button>
+          <Button onClick={() => nav('/plan')}>{t('Build my own plan')}</Button>
+        </div>
+      </section>
     )}
 
-    <section className="dashboard-section">
-      <div className="dashboard-section-head">
+    <section className="zen-section">
+      <div className="zen-section-head">
         <h2>{t('This week')}</h2>
         <span>{wThisWeek}{plannedPerWeek ? ' / ' + plannedPerWeek : ''} {t('this week')}</span>
       </div>
-      <div className="card week-card">
-        <div className="week-card-nav">
+      <div className="zen-week-card">
+        <div className="zen-week-nav">
           <button className="iconbtn" onClick={() => setWeekOffset(w => w - 1)} aria-label="Previous week"><Icon name="chevronLeft" /></button>
-          <div className="week-card-label">{wkLabel}</div>
+          <div className="zen-week-label">{wkLabel}</div>
           <button className="iconbtn" onClick={() => setWeekOffset(w => w + 1)} aria-label="Next week"><Icon name="chevronRight" /></button>
         </div>
         <div className="week">{strip}</div>
       </div>
     </section>
 
-    <section className="dashboard-section">
-      <div className="dashboard-section-head">
+    <section className="zen-section">
+      <div className="zen-section-head">
         <h2>{t('Body weight')}</h2>
         <span>{bw ? fmtDate(bw.d, true) : t('No entries yet')}</span>
       </div>
-      <div className="card">
-        <div className="row between" style={{ marginBottom: 12 }}>
-          <div className="row" style={{ gap: 8 }}>
-            <Button size="sm" icon="target" style={S.targetW ? { color: 'var(--yellow)' } : undefined} onClick={goalSheet}>{S.targetW ? fmtNum(S.targetW) : t('Goal')}</Button>
-            <Button size="sm" icon="plus" onClick={() => bwSheet()}>{t('Log')}</Button>
+      <div className="zen-weight-card">
+        <div className="zen-weight-top">
+          <div>
+            <div className="zen-weight-value">{bw ? fmtNum(bw.w) : '—'}<span>{bw ? S.unit : ''}</span></div>
+            {delta !== null && delta !== 0 && bw && (
+              <div className="small row" style={{ gap: 4, marginTop: 7, fontWeight: 650, color: bwDeltaColor(delta, bw.w) }}>
+                <Icon name={delta > 0 ? 'arrowUp' : 'arrowDown'} />
+                {fmtNum(Math.abs(delta))} {S.unit}
+              </div>
+            )}
+            {S.targetW && bw && (
+              <div className="small muted" style={{ marginTop: 7 }}>
+                {t('Goal')} {fmtNum(S.targetW)} {S.unit}
+              </div>
+            )}
           </div>
-          {delta !== null && delta !== 0 && (
-            <span className="small row" style={{ gap: 3, fontWeight: 650, color: bwDeltaColor(delta, bw.w) }}>
-              <Icon name={delta > 0 ? 'arrowUp' : 'arrowDown'} style={{ fontSize: 12 }} />
-              {fmtNum(Math.abs(delta))}
-            </span>
-          )}
+          <div className="zen-weight-actions">
+            <Button size="sm" icon="target" onClick={goalSheet}>{S.targetW ? fmtNum(S.targetW) : t('Goal')}</Button>
+            <Button size="sm" variant="primary" icon="plus" onClick={() => bwSheet()}>{t('Log')}</Button>
+          </div>
         </div>
 
-        {bw ? <>
-          <div className="weight-summary">
-            <div className="weight-value">{fmtNum(bw.w)}<span>{S.unit}</span></div>
-          </div>
-          {S.targetW && (
-            <div className="small row" style={{ color: 'var(--yellow)', marginTop: 8, gap: 5 }}>
-              <Icon name="target" style={{ fontSize: 13 }} />
-              <span>{t('Goal')} {fmtNum(S.targetW)} {S.unit} · {Math.abs(S.targetW - bw.w) < 0.05 ? t('reached!') : t(S.targetW > bw.w ? '{0} to gain' : '{0} to lose', fmtNum(Math.abs(S.targetW - bw.w)) + ' ' + S.unit)}</span>
-            </div>
-          )}
-          <div className="chart" style={{ marginTop: 10 }}><LineChart points={bwPoints} h={138} unit={S.unit} goal={S.targetW} /></div>
-        </> : <div className="muted small">{t("No entries yet — log your weight to start the curve. It's also asked before every workout.")}</div>}
+        {bw
+          ? <div className="chart"><LineChart points={bwPoints} h={150} unit={S.unit} goal={S.targetW} /></div>
+          : <div className="muted small">{t("No entries yet — log your weight to start the curve. It's also asked before every workout.")}</div>}
       </div>
     </section>
-
-    <button className="card tappable" style={{ cursor: 'pointer', width: '100%', textAlign: 'left' }} onClick={() => calendarSheet()}>
-      <div className="row between">
-        <div>
-          <div className="row" style={{ gap: 8, fontSize: 20, fontWeight: 680, letterSpacing: '-.025em' }}>
-            <Icon name="flame" style={{ color: 'var(--orange)' }} />
-            {t('{0} week streak', streak)}
-          </div>
-          <div className="muted small" style={{ marginTop: 4 }}>{t(S.workouts.length === 1 ? '{0} workout total' : '{0} workouts total', S.workouts.length)}</div>
-        </div>
-        <Icon name="calendar" className="chev" style={{ fontSize: 20 }} />
-      </div>
-    </button>
   </div>
 }
