@@ -1,0 +1,325 @@
+/* openGym — component-specific polish layered after redesign.css */
+
+/* ---------------------------------------------------------------- login -- */
+.login-screen {
+  min-height: min(820px, calc(100vh - 120px));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  max-width: 460px;
+}
+
+.login-brand-mark {
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 26px;
+  color: var(--on-acc);
+  background: var(--acc);
+  font-size: 38px;
+  box-shadow: 0 22px 60px color-mix(in srgb, var(--acc) 28%, transparent);
+  transform: rotate(-3deg);
+}
+
+.login-title {
+  margin: 0;
+  font-size: clamp(42px, 10vw, 58px);
+  line-height: .92;
+  font-weight: 780;
+  letter-spacing: -.06em;
+}
+
+.login-copy {
+  max-width: 360px;
+  margin: 13px auto 32px;
+  color: var(--label-2);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.login-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login-foot {
+  margin-top: 24px;
+  color: var(--label-3);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.login-screen .card {
+  text-align: left;
+}
+
+/* -------------------------------------------------------------- workout -- */
+.wprog {
+  height: 7px;
+  margin: -4px 0 22px;
+  border: 1px solid var(--sep);
+  background: color-mix(in srgb, var(--surface-2) 88%, transparent);
+}
+
+.wprog i {
+  box-shadow: 0 0 18px color-mix(in srgb, var(--acc) 36%, transparent);
+}
+
+.exmedia {
+  margin-bottom: 18px;
+  border-radius: 24px;
+  border: 1px solid var(--sep);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .13);
+}
+
+.exmedia img {
+  height: min(360px, 45vh);
+}
+
+.exmedia.compact img {
+  height: 150px;
+}
+
+.sethead {
+  padding: 0 4px 8px;
+  font-size: 9px;
+  font-weight: 720;
+  letter-spacing: .07em;
+}
+
+.setrow {
+  padding: 9px 0;
+}
+
+.setrow + .setrow::before {
+  left: 0;
+}
+
+.setrow .n {
+  width: 28px;
+  height: 28px;
+  font-weight: 700;
+  border: 1px solid var(--sep);
+}
+
+.setrow .stp {
+  min-height: 44px;
+  border: 1px solid var(--sep);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface-2) 88%, transparent);
+}
+
+.setrow .stp button {
+  height: 42px;
+}
+
+.setrow.done {
+  opacity: .58;
+}
+
+.setrow.done .stp {
+  background: var(--acc-soft);
+  border-color: color-mix(in srgb, var(--acc) 18%, transparent);
+}
+
+.setrow .setgo,
+.chk,
+.ck {
+  width: 32px;
+  height: 32px;
+}
+
+.progline {
+  margin: 10px 0 4px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--acc-soft);
+  border: 1px solid color-mix(in srgb, var(--acc) 16%, transparent);
+  font-weight: 560;
+}
+
+.progline.warn {
+  background: color-mix(in srgb, var(--yellow) 10%, transparent);
+  border-color: color-mix(in srgb, var(--yellow) 18%, transparent);
+}
+
+.ss-card {
+  border-radius: 24px;
+  border: 1px solid var(--sep);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.ss-hd {
+  color: var(--acc);
+  font-weight: 680;
+}
+
+.ss-amp {
+  color: var(--acc);
+}
+
+/* Workout header: the only header directly followed by the live progress bar. */
+.hdr:has(+ .wprog) {
+  position: sticky;
+  top: calc(var(--sat) + 8px);
+  z-index: 20;
+  margin-left: -6px;
+  margin-right: -6px;
+  padding: 8px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ---------------------------------------------------------------- timer -- */
+#timer {
+  left: 50%;
+  right: auto;
+  width: min(calc(100% - 24px), 560px);
+  bottom: calc(100px + var(--sab));
+  transform: translateX(-50%);
+  padding: 14px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--sep);
+  background: color-mix(in srgb, var(--bg-el) 94%, transparent);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .05);
+  animation: timer-in .24s var(--ease);
+}
+
+@keyframes timer-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+#timer .t {
+  font-size: 28px;
+  font-weight: 740;
+  letter-spacing: -.04em;
+}
+
+#timer .bar {
+  height: 6px;
+}
+
+#timer.working {
+  border-color: color-mix(in srgb, var(--acc) 34%, var(--sep));
+}
+
+/* ----------------------------------------------------------- modal/sheet -- */
+.mback {
+  background: rgba(2, 4, 8, .58);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.sheet {
+  left: 50%;
+  right: auto;
+  width: min(100%, 720px);
+  padding: 10px 22px calc(24px + var(--sab));
+  border: 1px solid var(--sep);
+  border-bottom: 0;
+  border-radius: 28px 28px 0 0;
+  background: color-mix(in srgb, var(--bg-el) 96%, transparent);
+  box-shadow: 0 -24px 70px rgba(0, 0, 0, .35);
+  animation: sheetup-premium .34s var(--ease);
+}
+
+:root[data-theme="light"] .sheet {
+  background: rgba(250, 251, 253, .98);
+}
+
+@keyframes sheetup-premium {
+  from { transform: translate(-50%, 100%); }
+  to { transform: translate(-50%, 0); }
+}
+
+.sheet .grab {
+  width: 42px;
+  background: var(--label-4);
+  margin-bottom: 18px;
+}
+
+.sheet h3 {
+  font-size: 24px;
+  font-weight: 730;
+  letter-spacing: -.035em;
+}
+
+.center {
+  width: min(calc(100% - 30px), 380px);
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid var(--sep);
+  background: var(--bg-el);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, .40);
+}
+
+/* --------------------------------------------------------------- toast -- */
+#toast {
+  bottom: calc(112px + var(--sab));
+  padding: 12px 18px;
+  border: 1px solid var(--sep);
+  background: color-mix(in srgb, var(--bg-el) 92%, transparent);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .28);
+}
+
+/* ------------------------------------------------------ empty / calendar -- */
+.empty {
+  margin: 10px 0;
+  padding: 42px 24px;
+  border: 1px dashed color-mix(in srgb, var(--label) 14%, transparent);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--surface) 62%, transparent);
+}
+
+.cal-d {
+  border: 1px solid var(--sep);
+  border-radius: 12px;
+}
+
+/* ------------------------------------------------------------- desktop -- */
+@media (min-width: 720px) {
+  .sheet {
+    bottom: 18px;
+    max-height: calc(100vh - 36px);
+    border-bottom: 1px solid var(--sep);
+    border-radius: 28px;
+  }
+
+  #timer {
+    bottom: 112px;
+  }
+}
+
+@media (max-width: 560px) {
+  .login-screen {
+    min-height: calc(100vh - 125px);
+  }
+
+  .login-brand-mark {
+    width: 72px;
+    height: 72px;
+    border-radius: 23px;
+    font-size: 34px;
+  }
+
+  .sheet {
+    padding-left: 17px;
+    padding-right: 17px;
+  }
+
+  .setrow .stp button {
+    width: 28px;
+  }
+
+  .setrow.eff3 .stp button {
+    width: 21px;
+  }
+}
