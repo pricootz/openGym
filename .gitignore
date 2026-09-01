@@ -1,0 +1,39 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local configuration / secrets
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
+frontend/node_modules/
+api/node_modules/
+frontend/dist/
+coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+/data/*
+!/data/.gitkeep
+/media/img/*
+/media/gif/*
+!/media/img/.gitkeep
+!/media/gif/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+
+# Capacitor / native build output
+frontend/android/.gradle/
+frontend/android/app/build/
+frontend/ios/App/Pods/
+frontend/ios/App/DerivedData/
