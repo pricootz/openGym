@@ -18,38 +18,97 @@ export default function Library() {
   const ql = q.toLowerCase().trim()
   const base = allExercises(S).filter(e => (!bp || e.bp === bp) && (!ql || e.n.toLowerCase().includes(ql) || e.tg.includes(ql) || e.eq.includes(ql) || (e.desc || '').toLowerCase().includes(ql)))
   const eqOpts = equipmentOf(base)
-  // Drop the equipment filter if the search narrowed it away, so you never hit a dead end.
   const eqOn = eqOpts.includes(eq) ? eq : ''
   const f = eqOn ? base.filter(e => e.eq === eqOn) : base
+  const activeFilters = (bp ? 1 : 0) + (eqOn ? 1 : 0) + (ql ? 1 : 0)
 
-  return <>
-    <div className="hdr"><div><h1>{t('Exercises')}</h1><div className="sub">{t('{0} exercises with animations', EXDB.length)}</div></div></div>
-    <div className="search" style={{ marginBottom: 10 }}><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
-      <input className="input" placeholder={t('Search…')} value={q} onChange={e => { setQ(e.target.value); setShown(40) }} /></div>
-    <div className="chips" style={{ marginBottom: eqOpts.length > 1 ? 8 : 12 }}>
-      <button className={'chip nocap' + (!bp ? ' on' : '')} onClick={() => { setBp(''); setEq(''); setShown(40) }}>{t('All')}</button>
-      {BODYPARTS.map(b => <button key={b} className={'chip' + (bp === b ? ' on' : '')} onClick={() => { setBp(b); setEq(''); setShown(40) }}>{t(b)}</button>)}
-    </div>
-    {eqOpts.length > 1 && <div className="chips" style={{ marginBottom: 12 }}>
-      <button className={'chip nocap' + (!eqOn ? ' on' : '')} onClick={() => { setEq(''); setShown(40) }}>{t('Any equipment')}</button>
-      {eqOpts.map(x => <button key={x} className={'chip' + (eqOn === x ? ' on' : '')} onClick={() => { setEq(x); setShown(40) }}>{t(x)}</button>)}
-    </div>}
-    <div className="list">
-      <div className="item" onClick={() => customExSheet(null, ex => exerciseDetailSheet(ex), q.trim())}>
-        <div className="thumb thumb-x"><Icon name="sparkles" /></div>
-        <div className="grow"><div className="tt">{t('Create your own exercise')}</div><div className="ss">{t('name + body part, no animation')}</div></div><Icon name="plus" className="chev" />
+  const clearFilters = () => {
+    setQ('')
+    setBp('')
+    setEq('')
+    setShown(40)
+  }
+
+  return <div className="library-v2">
+    <header className="library-head">
+      <div>
+        <div className="library-eyebrow"><Icon name="dumbbell" />{t('Exercise library')}</div>
+        <h1>{t('Exercises')}</h1>
+        <div className="library-sub">{t('{0} exercises with animations', EXDB.length)}</div>
       </div>
+      <button className="library-create" onClick={() => customExSheet(null, ex => exerciseDetailSheet(ex), q.trim())}>
+        <span><Icon name="plus" /></span>
+        <strong>{t('Create')}</strong>
+      </button>
+    </header>
+
+    <section className="library-search-panel">
+      <div className="library-search">
+        <Icon name="magnifier" />
+        <input className="input" placeholder={t('Search exercises, muscles or equipment…')} value={q}
+          onChange={e => { setQ(e.target.value); setShown(40) }} />
+        {q && <button className="library-search-clear" onClick={() => { setQ(''); setShown(40) }} aria-label={t('Clear')}><Icon name="xmark" /></button>}
+      </div>
+      <div className="library-result-row">
+        <div><strong>{f.length}</strong> {t('results')}</div>
+        {activeFilters > 0 && <button onClick={clearFilters}>{t('Clear filters')}</button>}
+      </div>
+    </section>
+
+    <section className="library-filter-block">
+      <div className="library-filter-label"><span>{t('Body part')}</span>{bp && <b>{t(bp)}</b>}</div>
+      <div className="chips library-chips">
+        <button className={'chip nocap' + (!bp ? ' on' : '')} onClick={() => { setBp(''); setEq(''); setShown(40) }}>{t('All')}</button>
+        {BODYPARTS.map(b => <button key={b} className={'chip' + (bp === b ? ' on' : '')} onClick={() => { setBp(b); setEq(''); setShown(40) }}>{t(b)}</button>)}
+      </div>
+    </section>
+
+    {eqOpts.length > 1 && <section className="library-filter-block equipment">
+      <div className="library-filter-label"><span>{t('Equipment')}</span>{eqOn && <b>{t(eqOn)}</b>}</div>
+      <div className="chips library-chips">
+        <button className={'chip nocap' + (!eqOn ? ' on' : '')} onClick={() => { setEq(''); setShown(40) }}>{t('Any equipment')}</button>
+        {eqOpts.map(x => <button key={x} className={'chip' + (eqOn === x ? ' on' : '')} onClick={() => { setEq(x); setShown(40) }}>{t(x)}</button>)}
+      </div>
+    </section>}
+
+    <div className="library-grid">
+      <button className="exercise-card exercise-card-create" onClick={() => customExSheet(null, ex => exerciseDetailSheet(ex), q.trim())}>
+        <span className="exercise-create-icon"><Icon name="sparkles" /></span>
+        <span className="exercise-card-copy">
+          <strong>{t('Create your own exercise')}</strong>
+          <small>{t('Name + body part, no animation')}</small>
+        </span>
+        <span className="exercise-card-arrow"><Icon name="plus" /></span>
+      </button>
+
       {f.slice(0, shown).map(e => {
         const best = bestWeightFor(S, e.id)
-        return <div key={e.id} className="item" onClick={() => exerciseDetailSheet(e)}>
-          <Thumb ex={e} />
-          <div className="grow"><div className="tt capitalize">{e.n}</div><div className="ss capitalize">{t(e.tg || e.bp)} · {t(e.eq)}</div></div>
-          {best > 0 && <span className="tag acc">{fmtNum(best)}</span>}
-          <Button size="sm" variant="tinted" icon="plus" onClick={ev => { ev.stopPropagation(); addToRoutineSheet(e) }}>{t('Plan')}</Button>
-        </div>
+        return <article key={e.id} className="exercise-card" onClick={() => exerciseDetailSheet(e)}>
+          <div className="exercise-card-media"><Thumb ex={e} /></div>
+          <div className="exercise-card-body">
+            <div className="exercise-card-meta">
+              <span>{t(e.tg || e.bp)}</span>
+              <span>{t(e.eq)}</span>
+            </div>
+            <h3 className="capitalize">{e.n}</h3>
+            <div className="exercise-card-foot">
+              <div className="exercise-best">
+                {best > 0 ? <><small>{t('Best')}</small><strong>{fmtNum(best)} {S.unit}</strong></> : <small>{t('Not trained yet')}</small>}
+              </div>
+              <Button size="sm" variant="tinted" icon="plus" onClick={ev => { ev.stopPropagation(); addToRoutineSheet(e) }}>{t('Plan')}</Button>
+            </div>
+          </div>
+        </article>
       })}
-      {f.length === 0 && <div className="empty"><div className="ico"><Icon name="magnifier" /></div>{t('No match')}</div>}
     </div>
-    {f.length > shown && <><div style={{ height: 10 }} /><Button onClick={() => setShown(s => s + 40)}>{t('Show more')}</Button></>}
-  </>
+
+    {f.length === 0 && <div className="library-empty">
+      <span><Icon name="magnifier" /></span>
+      <h2>{t('No match')}</h2>
+      <p>{t('Try another search or clear the active filters.')}</p>
+      <Button onClick={clearFilters}>{t('Clear filters')}</Button>
+    </div>}
+
+    {f.length > shown && <div className="library-more"><Button onClick={() => setShown(s => s + 40)}>{t('Show more')} · {f.length - shown}</Button></div>}
+  </div>
 }
