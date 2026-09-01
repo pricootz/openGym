@@ -55,6 +55,7 @@ export default function Home() {
 
   const wThisWeek = S.workouts.filter(w => weekKey(w.d) === weekKey(todayISO())).length
   const plannedPerWeek = Object.keys(S.week).filter(k => S.week[k]).length
+  const weekProgress = plannedPerWeek ? Math.min(100, Math.round((wThisWeek / plannedPerWeek) * 100)) : 0
   const bwPoints = S.bodyweight.slice(-30).map(b => ({ t: b.t || new Date(b.d).getTime(), y: b.w, d: b.d }))
 
   const onToday = () => {
@@ -102,6 +103,16 @@ export default function Home() {
           <span className="zen-tonal-chip"><Icon name="flame" />{t('{0} week streak', streak)}</span>
         </div>
       </div>
+
+      {!!plannedPerWeek && (
+        <div className="zen-week-progress" aria-label={`${weekProgress}% ${t('This week')}`}>
+          <div className="zen-week-ring" style={{ '--p': weekProgress }}><span>{weekProgress}%</span></div>
+          <div className="zen-week-copy">
+            <strong>{t('This week')}</strong>
+            <small>{wThisWeek} / {plannedPerWeek} {t('Workouts')}</small>
+          </div>
+        </div>
+      )}
 
       <button className={'zen-start-orb' + (S.active ? ' active' : '')} data-label={sessionAction} onClick={onToday} aria-label={sessionAction}>
         <Icon name={sessionIcon} />
