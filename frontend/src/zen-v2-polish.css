@@ -1,0 +1,749 @@
+/* openGym Zen UI v2.1 — expressive polish
+   Keeps the Material 3 / ZenConverter-inspired foundation, but adds stronger
+   visual hierarchy, depth and motion without changing workout logic. */
+
+:root {
+  --zen-glow: color-mix(in srgb, var(--acc) 26%, transparent);
+  --zen-glow-soft: color-mix(in srgb, var(--acc) 10%, transparent);
+  --zen-warm: color-mix(in srgb, var(--orange) 18%, transparent);
+  --zen-card-sheen: rgba(255,255,255,.055);
+}
+
+:root[data-theme="light"] {
+  --zen-card-sheen: rgba(255,255,255,.72);
+  --zen-glow: color-mix(in srgb, var(--acc) 18%, transparent);
+  --zen-glow-soft: color-mix(in srgb, var(--acc) 7%, transparent);
+}
+
+/* ---------------------------------------------------------- atmosphere -- */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 999px;
+  filter: blur(90px);
+  opacity: .82;
+}
+
+body::before {
+  width: 420px;
+  height: 420px;
+  top: -210px;
+  left: max(-190px, calc(50vw - 520px));
+  background: var(--zen-glow);
+}
+
+body::after {
+  width: 360px;
+  height: 360px;
+  right: max(-190px, calc(50vw - 560px));
+  top: 36vh;
+  background: color-mix(in srgb, var(--blue) 11%, transparent);
+}
+
+#app {
+  position: relative;
+}
+
+/* ------------------------------------------------------------- top bars -- */
+.zen-home-topbar,
+.hdr {
+  position: relative;
+}
+
+.zen-home-topbar::after,
+.hdr::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--zen-outline), transparent);
+  opacity: .65;
+}
+
+.zen-wordmark {
+  gap: 10px;
+  font-weight: 760;
+  letter-spacing: -.035em;
+}
+
+.zen-wordmark-mark {
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 12px 30px color-mix(in srgb, var(--acc) 26%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.22);
+}
+
+.zen-wordmark-mark::after {
+  content: '';
+  position: absolute;
+  width: 120%;
+  height: 38%;
+  left: -10%;
+  top: -4%;
+  transform: rotate(-18deg);
+  background: rgba(255,255,255,.24);
+  filter: blur(5px);
+}
+
+.iconbtn {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+.iconbtn:hover {
+  background: var(--zen-surface-high);
+}
+
+/* ------------------------------------------------------------ greeting -- */
+.zen-greeting {
+  margin-top: 26px;
+  margin-bottom: 20px;
+}
+
+.zen-greeting-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--zen-text-2);
+  font-size: 12px;
+  font-weight: 680;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.zen-greeting-kicker::before {
+  content: '';
+  width: 20px;
+  height: 2px;
+  border-radius: 99px;
+  background: var(--acc);
+  box-shadow: 0 0 14px var(--zen-glow);
+}
+
+.zen-greeting h1 {
+  margin-top: 8px;
+  max-width: 14ch;
+  font-size: clamp(38px, 9vw, 58px);
+  line-height: .96;
+  font-weight: 790;
+  letter-spacing: -.06em;
+}
+
+/* ------------------------------------------------------- training hero -- */
+.zen-training-hero {
+  isolation: isolate;
+  position: relative;
+  overflow: hidden;
+  min-height: 250px;
+  padding: 26px;
+  border: 1px solid color-mix(in srgb, var(--acc) 18%, var(--zen-outline));
+  background:
+    radial-gradient(circle at 84% 4%, color-mix(in srgb, var(--acc) 22%, transparent), transparent 34%),
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--acc) 10%, var(--zen-surface-mid)),
+      var(--zen-surface-low) 64%);
+  box-shadow:
+    0 34px 90px rgba(0,0,0,.22),
+    inset 0 1px 0 var(--zen-card-sheen);
+}
+
+:root[data-theme="light"] .zen-training-hero {
+  box-shadow:
+    0 30px 70px rgba(48,55,70,.12),
+    inset 0 1px 0 rgba(255,255,255,.95);
+}
+
+.zen-training-hero::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 220px;
+  height: 220px;
+  right: -62px;
+  bottom: -90px;
+  border-radius: 50%;
+  border: 34px solid color-mix(in srgb, var(--acc) 8%, transparent);
+  box-shadow:
+    0 0 0 28px color-mix(in srgb, var(--acc) 4%, transparent),
+    0 0 80px var(--zen-glow-soft);
+}
+
+.zen-training-hero::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  opacity: .16;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: linear-gradient(110deg, #000, transparent 72%);
+}
+
+.zen-training-hero.is-active {
+  border-color: color-mix(in srgb, var(--orange) 36%, var(--zen-outline));
+  background:
+    radial-gradient(circle at 84% 4%, color-mix(in srgb, var(--orange) 22%, transparent), transparent 34%),
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--orange) 9%, var(--zen-surface-mid)),
+      var(--zen-surface-low) 64%);
+}
+
+.zen-session-kicker {
+  font-weight: 730;
+  letter-spacing: .06em;
+}
+
+.zen-session-kicker i {
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--acc) 10%, transparent), 0 0 20px var(--zen-glow);
+}
+
+.zen-session-title {
+  max-width: 12ch;
+  margin-top: 10px;
+  font-size: clamp(34px, 7vw, 52px);
+  line-height: .98;
+  font-weight: 800;
+  letter-spacing: -.055em;
+}
+
+.zen-session-sub {
+  max-width: 46ch;
+  margin-top: 12px;
+  line-height: 1.52;
+}
+
+.zen-session-meta {
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.zen-tonal-chip {
+  border: 1px solid var(--zen-outline);
+  background: color-mix(in srgb, var(--zen-surface-high) 78%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+.zen-start-orb {
+  width: 92px;
+  height: 92px;
+  right: 26px;
+  bottom: 26px;
+  background:
+    radial-gradient(circle at 32% 24%, rgba(255,255,255,.30), transparent 28%),
+    var(--acc);
+  box-shadow:
+    0 22px 56px color-mix(in srgb, var(--acc) 38%, transparent),
+    0 0 0 8px color-mix(in srgb, var(--acc) 8%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.3);
+}
+
+.zen-start-orb::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid rgba(255,255,255,.22);
+}
+
+.zen-start-orb:hover {
+  transform: translateY(-4px) scale(1.025);
+}
+
+.zen-start-orb:active {
+  transform: translateY(1px) scale(.93) !important;
+}
+
+.zen-start-orb.active {
+  background:
+    radial-gradient(circle at 32% 24%, rgba(255,255,255,.28), transparent 28%),
+    var(--orange);
+  box-shadow:
+    0 22px 56px color-mix(in srgb, var(--orange) 34%, transparent),
+    0 0 0 8px color-mix(in srgb, var(--orange) 8%, transparent);
+}
+
+.zen-start-orb[data-label]::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 10px);
+  transform: translateX(-50%);
+  color: var(--zen-text-2);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: .02em;
+}
+
+/* ------------------------------------------------------ weekly progress -- */
+.zen-week-progress {
+  position: absolute;
+  right: 136px;
+  bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 13px 10px 10px;
+  border-radius: 18px;
+  border: 1px solid var(--zen-outline);
+  background: color-mix(in srgb, var(--zen-surface-high) 76%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.zen-week-ring {
+  --p: 0;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(var(--acc) calc(var(--p) * 1%), var(--zen-surface-highest) 0);
+  box-shadow: 0 0 22px var(--zen-glow-soft);
+}
+
+.zen-week-ring::before {
+  content: '';
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--zen-surface-mid);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.zen-week-ring span {
+  position: absolute;
+  font-size: 10px;
+  font-weight: 760;
+}
+
+.zen-week-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.zen-week-copy strong {
+  font-size: 12px;
+  font-weight: 740;
+}
+
+.zen-week-copy small {
+  color: var(--zen-text-2);
+  font-size: 10px;
+}
+
+/* ------------------------------------------------------------- glance -- */
+.zen-glance {
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.zen-glance-card {
+  overflow: hidden;
+  position: relative;
+  min-height: 132px;
+  padding: 16px;
+  border: 1px solid var(--zen-outline);
+  background:
+    linear-gradient(155deg, var(--zen-card-sheen), transparent 40%),
+    var(--zen-surface-low);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.zen-glance-card::after {
+  content: '';
+  position: absolute;
+  width: 88px;
+  height: 88px;
+  right: -40px;
+  bottom: -44px;
+  border-radius: 50%;
+  background: var(--zen-glow-soft);
+  filter: blur(4px);
+}
+
+.zen-glance-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--acc) 24%, var(--zen-outline));
+  box-shadow: 0 18px 36px rgba(0,0,0,.12);
+}
+
+.zen-glance-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: var(--zen-primary-container);
+  color: var(--acc);
+}
+
+.zen-glance-value {
+  margin-top: 16px;
+  font-size: clamp(28px, 5vw, 36px);
+  font-weight: 790;
+  letter-spacing: -.045em;
+}
+
+.zen-glance-label {
+  margin-top: 3px;
+  line-height: 1.25;
+}
+
+/* ----------------------------------------------------------- sections -- */
+.zen-section {
+  margin-top: 30px;
+}
+
+.zen-section-head {
+  margin-bottom: 11px;
+}
+
+.zen-section-head h2 {
+  font-size: 20px;
+  font-weight: 760;
+  letter-spacing: -.032em;
+}
+
+.zen-week-card,
+.zen-weight-card {
+  border: 1px solid var(--zen-outline);
+  background:
+    linear-gradient(155deg, var(--zen-card-sheen), transparent 30%),
+    var(--zen-surface-low);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.week {
+  gap: 6px;
+}
+
+.wday {
+  min-height: 82px;
+  border: 1px solid transparent;
+}
+
+.wday:hover {
+  border-color: var(--zen-outline);
+  background: var(--zen-surface-mid);
+}
+
+.wday.today {
+  background: var(--zen-primary-container);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc) 18%, transparent);
+}
+
+.wday.today .num {
+  box-shadow: 0 9px 22px var(--zen-glow);
+}
+
+.zen-weight-value {
+  font-size: clamp(42px, 8vw, 62px);
+  font-weight: 800;
+  letter-spacing: -.06em;
+}
+
+.zen-weight-card .chart {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--zen-outline);
+}
+
+/* ----------------------------------------------------- generic cards/ui -- */
+.card,
+.item,
+.tile,
+.sect-b {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.card:hover,
+.item:hover,
+.tile:hover {
+  background: color-mix(in srgb, var(--zen-surface-low) 74%, var(--zen-surface-mid));
+}
+
+.lrow-i {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.16);
+}
+
+.btn.primary {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--acc) 20%, transparent);
+}
+
+.btn.primary::after {
+  content: '';
+  position: absolute;
+  left: -30%;
+  top: -100%;
+  width: 46%;
+  height: 300%;
+  transform: rotate(24deg);
+  background: rgba(255,255,255,.20);
+  transition: left 420ms var(--zen-ease-strong);
+}
+
+.btn.primary:hover::after {
+  left: 120%;
+}
+
+.btn.primary:hover {
+  transform: translateY(-2px);
+}
+
+.field:focus,
+.input:focus {
+  box-shadow:
+    inset 0 0 0 2px var(--acc),
+    0 0 0 5px color-mix(in srgb, var(--acc) 8%, transparent);
+}
+
+/* --------------------------------------------------------- analytics -- */
+.tiles {
+  gap: 12px;
+}
+
+.tile {
+  overflow: hidden;
+  position: relative;
+  min-height: 112px;
+  padding: 17px;
+  border: 1px solid var(--zen-outline);
+}
+
+.tile::after {
+  content: '';
+  position: absolute;
+  width: 86px;
+  height: 86px;
+  right: -42px;
+  bottom: -42px;
+  border-radius: 50%;
+  background: var(--zen-glow-soft);
+}
+
+.tile .v {
+  margin-top: 10px;
+  font-size: 31px;
+  font-weight: 790;
+  letter-spacing: -.045em;
+}
+
+/* ------------------------------------------------------------ workout -- */
+.hdr:has(+ .wprog) {
+  border: 1px solid var(--zen-outline);
+  box-shadow: 0 14px 38px rgba(0,0,0,.16);
+}
+
+.wprog {
+  height: 8px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.14);
+}
+
+.wprog i {
+  background: linear-gradient(90deg, var(--acc), color-mix(in srgb, var(--acc) 68%, white));
+  box-shadow: 0 0 20px var(--zen-glow);
+}
+
+.exmedia {
+  box-shadow:
+    0 24px 60px rgba(0,0,0,.16),
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.setrow:not(.done):hover {
+  background: color-mix(in srgb, var(--zen-surface-high) 52%, transparent);
+  border-radius: 12px;
+}
+
+.setrow.done .n {
+  box-shadow: 0 0 18px var(--zen-glow-soft);
+}
+
+#timer {
+  border-color: color-mix(in srgb, var(--acc) 22%, var(--zen-outline));
+  box-shadow:
+    0 26px 70px rgba(0,0,0,.36),
+    0 0 0 1px rgba(255,255,255,.025),
+    0 0 36px var(--zen-glow-soft);
+}
+
+/* ---------------------------------------------------------- navigation -- */
+#tabbar.m3-nav {
+  padding-top: 9px;
+  border-color: color-mix(in srgb, var(--acc) 10%, var(--zen-outline));
+  background: color-mix(in srgb, var(--zen-surface-low) 90%, transparent);
+  box-shadow:
+    0 -18px 50px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.045);
+}
+
+.m3-nav-item {
+  position: relative;
+}
+
+.m3-nav-icon {
+  transition:
+    width var(--zen-med) var(--zen-ease-strong),
+    background var(--zen-med) var(--zen-ease-strong),
+    transform var(--zen-fast) var(--zen-ease);
+}
+
+.m3-nav-item:hover .m3-nav-icon {
+  background: var(--zen-surface-high);
+}
+
+.m3-nav-item.on .m3-nav-icon {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 8px 20px var(--zen-glow-soft);
+}
+
+.m3-nav-start .m3-nav-icon {
+  background: color-mix(in srgb, var(--acc) 14%, var(--zen-surface-high));
+  color: var(--acc);
+}
+
+.m3-nav-start.on .m3-nav-icon,
+.m3-nav-start.rec .m3-nav-icon {
+  background: var(--acc);
+  color: var(--on-acc);
+  box-shadow: 0 10px 26px var(--zen-glow);
+}
+
+.m3-nav-start.rec .m3-nav-icon {
+  background: var(--orange);
+  color: #111;
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--orange) 28%, transparent);
+}
+
+/* --------------------------------------------------------- sheets/login -- */
+.sheet {
+  box-shadow:
+    0 -28px 90px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.055);
+}
+
+.sheet .grab {
+  box-shadow: 0 0 0 1px rgba(255,255,255,.025);
+}
+
+.login-brand-mark {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.32), transparent 26%),
+    var(--acc);
+  box-shadow:
+    0 26px 70px color-mix(in srgb, var(--acc) 34%, transparent),
+    0 0 0 10px color-mix(in srgb, var(--acc) 7%, transparent);
+}
+
+.login-title {
+  font-weight: 810;
+  letter-spacing: -.065em;
+}
+
+/* ---------------------------------------------------------- responsive -- */
+@media (max-width: 620px) {
+  .zen-training-hero {
+    min-height: 292px;
+    padding: 22px;
+  }
+
+  .zen-session-title {
+    max-width: 10ch;
+  }
+
+  .zen-week-progress {
+    left: 22px;
+    right: auto;
+    bottom: 22px;
+  }
+
+  .zen-start-orb {
+    width: 78px;
+    height: 78px;
+    right: 22px;
+    bottom: 24px;
+  }
+
+  .zen-glance {
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 8px;
+  }
+
+  .zen-glance-card {
+    min-height: 116px;
+    padding: 13px 11px;
+  }
+
+  .zen-glance-value {
+    font-size: 26px;
+  }
+
+  .zen-glance-label {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 430px) {
+  #app {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .zen-greeting h1 {
+    font-size: 40px;
+  }
+
+  .zen-training-hero {
+    border-radius: 28px;
+  }
+
+  .zen-session-title {
+    font-size: 36px;
+  }
+
+  .zen-session-sub {
+    max-width: 31ch;
+    font-size: 13px;
+  }
+
+  .zen-tonal-chip:nth-child(n+3) {
+    display: none;
+  }
+
+  .zen-week-progress {
+    padding-right: 10px;
+  }
+
+  .zen-week-copy small {
+    max-width: 70px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .week {
+    gap: 3px;
+  }
+
+  .wday {
+    min-height: 72px;
+    padding-inline: 1px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn.primary::after { display: none; }
+  .zen-start-orb:hover,
+  .zen-glance-card:hover,
+  .btn.primary:hover { transform: none; }
+}
