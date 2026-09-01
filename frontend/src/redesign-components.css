@@ -222,6 +222,7 @@
   left: 50%;
   right: auto;
   width: min(100%, 720px);
+  transform: translateX(-50%);
   padding: 10px 22px calc(24px + var(--sab));
   border: 1px solid var(--sep);
   border-bottom: 0;
