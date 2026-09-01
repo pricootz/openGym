@@ -7,6 +7,7 @@ import './redesign.css'
 import './redesign-components.css'
 import './zen-v2.css'
 import './zen-v2-polish.css'
+import './workout-v2.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode><App /></StrictMode>
