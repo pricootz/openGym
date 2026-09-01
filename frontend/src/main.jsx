@@ -5,6 +5,7 @@ import { MOBILE } from './lib/mobile.js'
 import './index.css'
 import './redesign.css'
 import './redesign-components.css'
+import './zen-v2.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode><App /></StrictMode>
