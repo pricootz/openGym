@@ -6,6 +6,7 @@ import './index.css'
 import './redesign.css'
 import './redesign-components.css'
 import './zen-v2.css'
+import './zen-v2-polish.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode><App /></StrictMode>
