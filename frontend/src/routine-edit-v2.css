@@ -1,0 +1,404 @@
+/* openGym — Routine editor V2.3
+   Completes the visual planner flow without touching routine logic. */
+
+#app .narrow:has(> .hdr .input) {
+  --re-surface: color-mix(in srgb, var(--zen-surface-low) 94%, transparent);
+  --re-raised: color-mix(in srgb, var(--zen-surface-mid) 96%, transparent);
+  --re-outline: color-mix(in srgb, var(--zen-text) 9%, transparent);
+  max-width: 720px;
+}
+
+/* --------------------------------------------------------- editor header -- */
+#app .narrow:has(> .hdr .input) > .hdr {
+  position: sticky;
+  top: calc(var(--sat) + 8px);
+  z-index: 30;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) 46px;
+  align-items: center;
+  gap: 10px;
+  margin: 0 -4px 18px;
+  padding: 10px;
+  border: 1px solid var(--re-outline);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--zen-surface) 86%, transparent);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  box-shadow: 0 14px 38px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+#app .narrow:has(> .hdr .input) > .hdr::after { display: none; }
+
+#app .narrow:has(> .hdr .input) > .hdr > div {
+  min-width: 0;
+  margin: 0 !important;
+}
+
+#app .narrow:has(> .hdr .input) > .hdr .input {
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  background: transparent;
+  color: var(--zen-text);
+  font-size: 21px !important;
+  font-weight: 760 !important;
+  letter-spacing: -.04em !important;
+  text-align: center;
+  transition: background 160ms var(--zen-ease), border-color 160ms var(--zen-ease);
+}
+
+#app .narrow:has(> .hdr .input) > .hdr .input:hover {
+  background: var(--re-raised);
+}
+
+#app .narrow:has(> .hdr .input) > .hdr .input:focus {
+  border-color: color-mix(in srgb, var(--acc) 32%, transparent);
+  background: var(--re-raised);
+  box-shadow: none;
+}
+
+#app .narrow:has(> .hdr .input) > .hdr .iconbtn {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--re-outline);
+  background: var(--re-raised);
+}
+
+#app .narrow:has(> .hdr .input) > .hdr .iconbtn:last-child {
+  color: var(--zen-on-primary);
+  border-color: transparent;
+  background: var(--acc);
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--acc) 20%, transparent);
+}
+
+/* --------------------------------------------------------- progression -- */
+#app .narrow:has(> .hdr .input) > .sect-b {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 10px !important;
+  border: 1px solid var(--re-outline);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 94% 12%, color-mix(in srgb, var(--acc) 12%, transparent), transparent 38%),
+    var(--re-surface);
+}
+
+#app .narrow:has(> .hdr .input) > .sect-b::before {
+  content: 'Progression';
+  position: absolute;
+  top: 11px;
+  right: 14px;
+  z-index: 2;
+  color: var(--zen-text-3);
+  font-size: 9px;
+  font-weight: 720;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+#app .narrow:has(> .hdr .input) > .sect-b .lrow {
+  min-height: 70px;
+  padding: 17px 16px;
+}
+
+#app .narrow:has(> .hdr .input) > .sect-b .lrow-i {
+  width: 38px;
+  height: 38px;
+  border-radius: 13px;
+  background: var(--acc-soft);
+  color: var(--acc);
+}
+
+#app .narrow:has(> .hdr .input) > .sect-b + .small.dim {
+  margin: 0 4px 24px !important;
+  color: var(--zen-text-3);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+/* ------------------------------------------------------- exercise list -- */
+#app .narrow:has(> .hdr .input) > .list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  counter-reset: routine-ex;
+}
+
+#app .narrow:has(> .hdr .input) > .list > div {
+  counter-increment: routine-ex;
+  position: relative;
+}
+
+#app .narrow:has(> .hdr .input) > .list > div::before {
+  content: counter(routine-ex, decimal-leading-zero);
+  position: absolute;
+  z-index: 4;
+  left: 10px;
+  top: 10px;
+  min-width: 27px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  padding: 0 6px;
+  border-radius: 999px;
+  color: rgba(255,255,255,.9);
+  background: rgba(10,12,16,.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: .06em;
+  pointer-events: none;
+}
+
+#app .narrow:has(> .hdr .input) .ss-label {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 2px 0 7px 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: var(--acc);
+  background: var(--acc-soft);
+  border: 1px solid color-mix(in srgb, var(--acc) 18%, transparent);
+  font-size: 10px;
+  font-weight: 720;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+#app .narrow:has(> .hdr .input) .ss-label .icn { font-size: 12px; }
+
+#app .narrow:has(> .hdr .input) > .list .item {
+  min-height: 105px;
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 11px 11px 11px 12px;
+  overflow: hidden;
+  border: 1px solid var(--re-outline);
+  border-radius: 24px;
+  background: var(--re-surface);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+  transition:
+    transform 160ms var(--zen-ease),
+    background 160ms var(--zen-ease),
+    border-color 160ms var(--zen-ease),
+    box-shadow 160ms var(--zen-ease);
+}
+
+#app .narrow:has(> .hdr .input) > .list .item:hover {
+  transform: translateY(-2px);
+  border-color: var(--zen-outline-strong);
+  background: var(--zen-surface-mid);
+  box-shadow: 0 14px 36px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.045);
+}
+
+#app .narrow:has(> .hdr .input) > .list .item:active { transform: scale(.985); }
+
+#app .narrow:has(> .hdr .input) > .list .item.in-ss {
+  border-color: color-mix(in srgb, var(--acc) 19%, var(--re-outline));
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--acc) 6%, var(--re-surface)), var(--re-surface) 34%);
+}
+
+#app .narrow:has(> .hdr .input) > .list .thumb {
+  width: 82px;
+  height: 82px;
+  border-radius: 18px;
+  object-fit: contain;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
+}
+
+#app .narrow:has(> .hdr .input) > .list .grow {
+  align-self: center;
+  min-width: 0;
+}
+
+#app .narrow:has(> .hdr .input) > .list .tt {
+  overflow: hidden;
+  color: var(--zen-text);
+  font-size: 18px;
+  line-height: 1.13;
+  font-weight: 740;
+  letter-spacing: -.035em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#app .narrow:has(> .hdr .input) > .list .ss {
+  margin-top: 7px;
+  overflow: hidden;
+  color: var(--zen-text-2);
+  font-size: 11px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Right-side reorder controls become a compact control rail. */
+#app .narrow:has(> .hdr .input) > .list .item > div:last-child {
+  gap: 4px !important;
+  padding: 4px;
+  border: 1px solid var(--re-outline);
+  border-radius: 15px;
+  background: var(--zen-surface-high);
+}
+
+#app .narrow:has(> .hdr .input) > .list .item > div:last-child .iconbtn {
+  color: var(--zen-text-2);
+  background: transparent;
+  border: 0;
+}
+
+#app .narrow:has(> .hdr .input) > .list .item > div:last-child .iconbtn:hover {
+  color: var(--zen-text);
+  background: var(--zen-surface-highest);
+}
+
+#app .narrow:has(> .hdr .input) > .list .item > div:last-child .iconbtn.on-ss {
+  color: var(--acc);
+  background: var(--acc-soft);
+}
+
+/* -------------------------------------------------------- empty routine -- */
+#app .narrow:has(> .hdr .input) > .empty {
+  margin: 4px 0 18px;
+  padding: 48px 24px;
+  border: 1px dashed color-mix(in srgb, var(--acc) 25%, var(--re-outline));
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--acc) 3%, var(--re-surface));
+}
+
+#app .narrow:has(> .hdr .input) > .empty .ico {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 15px;
+  border-radius: 22px;
+  color: var(--acc);
+  background: var(--acc-soft);
+}
+
+/* ----------------------------------------------------------- body map -- */
+#app .narrow:has(> .hdr .input) > .card {
+  position: relative;
+  margin-top: 24px !important;
+  padding: 22px;
+  overflow: hidden;
+  border: 1px solid var(--re-outline);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 80% 0%, color-mix(in srgb, var(--acc) 8%, transparent), transparent 44%),
+    var(--re-surface);
+}
+
+#app .narrow:has(> .hdr .input) > .card h2 {
+  margin-bottom: 15px;
+  color: var(--zen-text);
+  font-size: 21px;
+  font-weight: 740;
+  letter-spacing: -.035em;
+  text-transform: none;
+}
+
+#app .narrow:has(> .hdr .input) > .card .bodymap {
+  margin: 2px auto 10px;
+}
+
+#app .narrow:has(> .hdr .input) > .card .mchip {
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: var(--zen-text-2);
+  background: var(--zen-surface-high);
+  border: 1px solid var(--re-outline);
+}
+
+/* -------------------------------------------------------- bottom actions -- */
+#app .narrow:has(> .hdr .input) > .small.dim.row {
+  margin: 14px 4px !important;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--zen-surface-low);
+  color: var(--zen-text-3);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+#app .narrow:has(> .hdr .input) > .btn.primary {
+  min-height: 56px;
+  border-radius: 18px;
+  font-size: 16px;
+  font-weight: 750;
+  box-shadow: 0 16px 34px color-mix(in srgb, var(--acc) 20%, transparent);
+}
+
+#app .narrow:has(> .hdr .input) > .btn.danger {
+  margin-top: 4px;
+  min-height: 50px;
+  border-radius: 17px;
+  background: color-mix(in srgb, var(--red) 9%, var(--zen-surface-low));
+  border: 1px solid color-mix(in srgb, var(--red) 17%, transparent);
+}
+
+@media (max-width: 560px) {
+  #app .narrow:has(> .hdr .input) > .hdr {
+    grid-template-columns: 42px minmax(0, 1fr) 42px;
+    gap: 7px;
+    padding: 8px;
+    border-radius: 19px;
+  }
+
+  #app .narrow:has(> .hdr .input) > .hdr .input {
+    height: 42px;
+    padding-inline: 7px;
+    font-size: 18px !important;
+  }
+
+  #app .narrow:has(> .hdr .input) > .hdr .iconbtn {
+    width: 38px;
+    height: 38px;
+  }
+
+  #app .narrow:has(> .hdr .input) > .list .item {
+    grid-template-columns: 70px minmax(0, 1fr) auto;
+    min-height: 94px;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 21px;
+  }
+
+  #app .narrow:has(> .hdr .input) > .list .thumb {
+    width: 70px;
+    height: 70px;
+    border-radius: 16px;
+  }
+
+  #app .narrow:has(> .hdr .input) > .list .tt { font-size: 16px; }
+
+  #app .narrow:has(> .hdr .input) > .list .item > div:last-child {
+    padding: 2px;
+    border-radius: 13px;
+  }
+}
+
+@media (max-width: 390px) {
+  #app .narrow:has(> .hdr .input) > .list .item {
+    grid-template-columns: 62px minmax(0, 1fr) auto;
+  }
+
+  #app .narrow:has(> .hdr .input) > .list .thumb {
+    width: 62px;
+    height: 62px;
+  }
+
+  #app .narrow:has(> .hdr .input) > .list .ss {
+    max-width: 150px;
+  }
+}
