@@ -1,0 +1,515 @@
+/* openGym — Stats UI V2.4
+   Premium analytics layer scoped to the Stats page via its unique KPI tile grid.
+   Presentation only: no analytics or workout logic changes. */
+
+#app:has(.tiles) {
+  max-width: 920px;
+}
+
+/* ================================================================
+   STATS HEADER
+   ================================================================ */
+#app:has(.tiles) > .hdr {
+  margin-bottom: 22px;
+  padding: 6px 2px 0;
+}
+
+#app:has(.tiles) > .hdr h1 {
+  font-size: clamp(38px, 7vw, 54px);
+  font-weight: 800;
+  letter-spacing: -.055em;
+}
+
+#app:has(.tiles) > .hdr .sub {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--zen-text-2);
+}
+
+#app:has(.tiles) > .hdr .iconbtn {
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--zen-outline);
+  background: color-mix(in srgb, var(--zen-surface-high) 86%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+/* ================================================================
+   KPI SCOREBOARD
+   ================================================================ */
+#app:has(.tiles) .tiles {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 18px;
+}
+
+#app:has(.tiles) .tile {
+  position: relative;
+  min-height: 132px;
+  overflow: hidden;
+  padding: 16px;
+  border: 1px solid var(--zen-outline);
+  border-radius: 24px;
+  background:
+    linear-gradient(145deg, var(--zen-card-sheen), transparent 42%),
+    color-mix(in srgb, var(--zen-surface-low) 94%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+#app:has(.tiles) .tile::before {
+  content: '';
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  right: -42px;
+  top: -42px;
+  border-radius: 999px;
+  background: var(--tile-glow, var(--zen-glow-soft));
+  filter: blur(4px);
+  opacity: .9;
+}
+
+#app:has(.tiles) .tile:nth-child(1) { --tile-glow: color-mix(in srgb, var(--acc) 18%, transparent); }
+#app:has(.tiles) .tile:nth-child(2) { --tile-glow: color-mix(in srgb, var(--blue) 16%, transparent); }
+#app:has(.tiles) .tile:nth-child(3) { --tile-glow: color-mix(in srgb, var(--orange) 18%, transparent); }
+#app:has(.tiles) .tile:nth-child(4) { --tile-glow: color-mix(in srgb, var(--purple) 16%, transparent); }
+
+#app:has(.tiles) .tile .l {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--zen-text-2);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+#app:has(.tiles) .tile .l .icn {
+  width: 28px;
+  height: 28px;
+  padding: 6px;
+  border-radius: 9px;
+  color: var(--zen-text);
+  background: var(--zen-surface-high);
+}
+
+#app:has(.tiles) .tile .v {
+  position: relative;
+  z-index: 1;
+  margin-top: 18px;
+  font-size: clamp(27px, 4vw, 36px);
+  font-weight: 780;
+  line-height: 1;
+  letter-spacing: -.045em;
+}
+
+#app:has(.tiles) .tile:hover {
+  transform: translateY(-2px);
+  border-color: var(--zen-outline-strong);
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.065), transparent 44%),
+    var(--zen-surface-mid);
+}
+
+/* ================================================================
+   ANALYTICS CARDS
+   ================================================================ */
+#app:has(.tiles) > .card,
+#app:has(.tiles) > .cols .card {
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid var(--zen-outline);
+  border-radius: 28px;
+  background:
+    linear-gradient(150deg, rgba(255,255,255,.026), transparent 34%),
+    color-mix(in srgb, var(--zen-surface-low) 96%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+#app:has(.tiles) > .card::before,
+#app:has(.tiles) > .cols .card::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 110px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--acc), transparent);
+  opacity: .55;
+}
+
+#app:has(.tiles) .card h2 {
+  color: var(--zen-text);
+  font-size: 14px;
+  font-weight: 760;
+  letter-spacing: -.015em;
+  text-transform: none;
+}
+
+#app:has(.tiles) .card h2 .dim {
+  color: var(--zen-text-3);
+  font-size: 12px;
+  font-weight: 520;
+}
+
+#app:has(.tiles) .cols {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+#app:has(.tiles) .cols > .card {
+  margin-bottom: 14px;
+}
+
+/* ================================================================
+   CHART STAGE
+   ================================================================ */
+#app:has(.tiles) .chart {
+  position: relative;
+  margin-top: 12px;
+  padding: 12px 8px 2px;
+  overflow: visible;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--acc) 4%, transparent), transparent 55%),
+    color-mix(in srgb, var(--zen-surface-mid) 45%, transparent);
+}
+
+#app:has(.tiles) .chart::before {
+  content: '';
+  position: absolute;
+  inset: 12px 10px 8px;
+  pointer-events: none;
+  border-radius: 14px;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(25% - 1px),
+    color-mix(in srgb, var(--zen-text) 5%, transparent) 25%
+  );
+  opacity: .7;
+}
+
+#app:has(.tiles) .chart svg {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 9px 22px rgba(0,0,0,.08));
+}
+
+#app:has(.tiles) .ctip {
+  z-index: 4;
+  border: 1px solid var(--zen-outline);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--zen-surface-highest) 94%, transparent);
+  box-shadow: 0 14px 34px rgba(0,0,0,.28);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ================================================================
+   SEGMENTED CONTROLS
+   ================================================================ */
+#app:has(.tiles) .seg {
+  padding: 3px;
+  border: 1px solid var(--zen-outline);
+  border-radius: 13px;
+  background: var(--zen-surface-mid);
+}
+
+#app:has(.tiles) .seg-sel {
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc((100% - 6px)/var(--n));
+  border: 1px solid color-mix(in srgb, var(--acc) 16%, transparent);
+  border-radius: 10px;
+  background: var(--zen-primary-container);
+  box-shadow: 0 5px 14px rgba(0,0,0,.12);
+}
+
+#app:has(.tiles) .seg button {
+  min-height: 32px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+#app:has(.tiles) .seg button.on {
+  color: var(--zen-on-primary-container);
+}
+
+/* ================================================================
+   ACTIVITY HEATMAP
+   ================================================================ */
+#app:has(.tiles) .hm-wrap {
+  margin: 6px -4px 0;
+  padding: 12px 4px 4px;
+}
+
+#app:has(.tiles) .hm-c {
+  width: 12px;
+  height: 12px;
+  border: 1px solid color-mix(in srgb, var(--zen-text) 4%, transparent);
+  border-radius: 4px;
+  background: var(--zen-surface-high);
+}
+
+#app:has(.tiles) .hm-c.l1 { background: color-mix(in srgb, var(--acc) 24%, var(--zen-surface-high)); }
+#app:has(.tiles) .hm-c.l2 { background: color-mix(in srgb, var(--acc) 46%, var(--zen-surface-high)); }
+#app:has(.tiles) .hm-c.l3 { background: color-mix(in srgb, var(--acc) 70%, var(--zen-surface-high)); }
+#app:has(.tiles) .hm-c.l4 {
+  background: var(--acc);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--acc) 22%, transparent);
+}
+
+#app:has(.tiles) .hm-c.today {
+  box-shadow: 0 0 0 2px var(--zen-text), 0 0 18px color-mix(in srgb, var(--acc) 30%, transparent);
+}
+
+/* ================================================================
+   MUSCLE BALANCE
+   ================================================================ */
+#app:has(.tiles) .bodymap {
+  position: relative;
+  margin: 8px 0 12px;
+  padding: 14px 8px 8px;
+  border: 1px solid var(--zen-outline);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--acc) 8%, transparent), transparent 46%),
+    color-mix(in srgb, var(--zen-surface-mid) 52%, transparent);
+}
+
+#app:has(.tiles) .bm-v {
+  max-height: min(48vh, 390px);
+  filter: drop-shadow(0 14px 28px rgba(0,0,0,.14));
+}
+
+#app:has(.tiles) .bm-m {
+  transition: fill .22s var(--zen-ease), filter .22s var(--zen-ease), transform .22s var(--zen-ease);
+  transform-origin: center;
+}
+
+#app:has(.tiles) .bodymap.tappable .bm-m:hover {
+  filter: brightness(1.16);
+}
+
+#app:has(.tiles) .mrow {
+  min-height: 34px;
+  gap: 10px;
+  padding: 7px 0;
+}
+
+#app:has(.tiles) .mrow + .mrow {
+  border-top: 1px solid color-mix(in srgb, var(--zen-text) 5%, transparent);
+}
+
+#app:has(.tiles) .mrow .bar {
+  width: 100px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--zen-surface-high);
+}
+
+#app:has(.tiles) .mrow .bar i {
+  box-shadow: 0 0 14px color-mix(in srgb, var(--acc) 24%, transparent);
+}
+
+#app:has(.tiles) .mchip {
+  padding: 6px 10px;
+  border: 1px solid var(--zen-outline);
+  border-radius: 999px;
+  background: var(--zen-surface-high);
+  font-size: 11px;
+}
+
+/* ================================================================
+   EFFORT CARD
+   ================================================================ */
+#app:has(.tiles) .stat-v {
+  font-size: clamp(30px, 5vw, 42px);
+  font-weight: 790;
+  letter-spacing: -.045em;
+}
+
+#app:has(.tiles) .card:has(.stat-v) {
+  background:
+    radial-gradient(circle at 86% 10%, color-mix(in srgb, var(--yellow) 9%, transparent), transparent 30%),
+    color-mix(in srgb, var(--zen-surface-low) 96%, transparent);
+}
+
+#app:has(.tiles) .card:has(.stat-v) .mrow .bar i {
+  box-shadow: 0 0 12px color-mix(in srgb, var(--yellow) 20%, transparent);
+}
+
+/* ================================================================
+   BODY WEIGHT + EXERCISE PROGRESS
+   ================================================================ */
+#app:has(.tiles) .cols .card:first-child {
+  background:
+    radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--acc) 8%, transparent), transparent 34%),
+    var(--zen-surface-low);
+}
+
+#app:has(.tiles) .cols .card:last-child {
+  background:
+    radial-gradient(circle at 95% 5%, color-mix(in srgb, var(--blue) 8%, transparent), transparent 34%),
+    var(--zen-surface-low);
+}
+
+#app:has(.tiles) .cols .sect-b {
+  border: 1px solid var(--zen-outline);
+  border-radius: 15px;
+  background: var(--zen-surface-mid);
+}
+
+#app:has(.tiles) .cols .lrow {
+  min-height: 50px;
+}
+
+#app:has(.tiles) .cols .card:last-child > div[style*="margin-top: 8px"] .row {
+  min-height: 34px;
+  border-color: color-mix(in srgb, var(--zen-text) 7%, transparent) !important;
+}
+
+/* ================================================================
+   RECENT WORKOUTS
+   ================================================================ */
+#app:has(.tiles) > .row.between:has(+ .list) {
+  margin-top: 18px;
+  padding: 0 4px;
+}
+
+#app:has(.tiles) > .row.between:has(+ .list) h4.sec {
+  color: var(--zen-text);
+  font-size: 18px;
+  font-weight: 760;
+  letter-spacing: -.025em;
+  text-transform: none;
+}
+
+#app:has(.tiles) > .list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+#app:has(.tiles) > .list .item,
+#app:has(.tiles) > .list .lrow {
+  min-height: 72px;
+  border: 1px solid var(--zen-outline);
+  border-radius: 20px;
+  background: var(--zen-surface-low);
+}
+
+#app:has(.tiles) > .list .item:hover,
+#app:has(.tiles) > .list .lrow:hover {
+  transform: translateY(-1px);
+  border-color: var(--zen-outline-strong);
+  background: var(--zen-surface-mid);
+}
+
+/* ================================================================
+   EMPTY STATES
+   ================================================================ */
+#app:has(.tiles) .card .muted.small:only-child {
+  padding: 24px 10px;
+  text-align: center;
+}
+
+/* ================================================================
+   LIGHT THEME
+   ================================================================ */
+:root[data-theme="light"] #app:has(.tiles) .tile,
+:root[data-theme="light"] #app:has(.tiles) > .card,
+:root[data-theme="light"] #app:has(.tiles) > .cols .card {
+  box-shadow: 0 12px 32px rgba(42, 48, 58, .055), inset 0 1px 0 rgba(255,255,255,.75);
+}
+
+:root[data-theme="light"] #app:has(.tiles) .chart {
+  background: rgba(255,255,255,.48);
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 760px) {
+  #app:has(.tiles) .tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #app:has(.tiles) .tile {
+    min-height: 112px;
+  }
+
+  #app:has(.tiles) .cols {
+    grid-template-columns: 1fr;
+  }
+
+  #app:has(.tiles) > .list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  #app:has(.tiles) > .hdr h1 {
+    font-size: 40px;
+  }
+
+  #app:has(.tiles) .tiles {
+    gap: 9px;
+  }
+
+  #app:has(.tiles) .tile {
+    min-height: 104px;
+    padding: 13px;
+    border-radius: 20px;
+  }
+
+  #app:has(.tiles) .tile .l {
+    font-size: 9px;
+  }
+
+  #app:has(.tiles) .tile .l .icn {
+    width: 25px;
+    height: 25px;
+    padding: 5px;
+  }
+
+  #app:has(.tiles) .tile .v {
+    margin-top: 13px;
+    font-size: 27px;
+  }
+
+  #app:has(.tiles) > .card,
+  #app:has(.tiles) > .cols .card {
+    padding: 17px;
+    border-radius: 23px;
+  }
+
+  #app:has(.tiles) .bodymap {
+    margin-inline: -2px;
+    padding-inline: 2px;
+  }
+
+  #app:has(.tiles) .mrow .bar {
+    width: 72px;
+  }
+
+  #app:has(.tiles) .chart {
+    margin-inline: -4px;
+    padding-inline: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #app:has(.tiles) .tile,
+  #app:has(.tiles) .item,
+  #app:has(.tiles) .bm-m {
+    transition: none !important;
+  }
+}
