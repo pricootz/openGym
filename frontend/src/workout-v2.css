@@ -1,0 +1,667 @@
+/* openGym — Workout UI V2.2
+   A focused training surface layered after the Zen / Material 3 system.
+   No workout state or interaction logic lives here: this file only changes presentation. */
+
+/* ================================================================
+   ACTIVE WORKOUT SHELL
+   ================================================================ */
+#app .narrow:has(> .wprog) {
+  --wo-surface: color-mix(in srgb, var(--zen-surface-low) 92%, transparent);
+  --wo-raised: color-mix(in srgb, var(--zen-surface-mid) 94%, transparent);
+  --wo-strong: color-mix(in srgb, var(--zen-surface-high) 96%, transparent);
+  --wo-outline: color-mix(in srgb, var(--zen-text) 9%, transparent);
+  --wo-accent-outline: color-mix(in srgb, var(--acc) 30%, transparent);
+  position: relative;
+  max-width: 720px;
+}
+
+/* Session header — compact, sticky and glanceable while moving between sets. */
+#app .narrow:has(> .wprog) > .hdr {
+  position: sticky;
+  top: calc(var(--sat) + 8px);
+  z-index: 35;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  align-items: center;
+  gap: 12px;
+  margin: 0 -4px 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--wo-outline);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--zen-surface) 84%, transparent);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  box-shadow: 0 14px 42px rgba(0, 0, 0, .19), inset 0 1px 0 rgba(255,255,255,.045);
+}
+
+#app .narrow:has(> .wprog) > .hdr::after {
+  display: none;
+}
+
+#app .narrow:has(> .wprog) > .hdr > div {
+  min-width: 0;
+}
+
+#app .narrow:has(> .wprog) > .hdr > div > div:first-child {
+  overflow: hidden;
+  color: var(--zen-text);
+  font-size: 15px;
+  font-weight: 760 !important;
+  letter-spacing: -.025em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#app .narrow:has(> .wprog) > .hdr .sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+  color: var(--zen-text-2);
+  font-size: 11px;
+  font-weight: 620;
+  letter-spacing: .02em;
+}
+
+#app .narrow:has(> .wprog) > .hdr .iconbtn {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--wo-outline);
+  background: var(--wo-raised);
+}
+
+#app .narrow:has(> .wprog) > .hdr .iconbtn:last-child {
+  color: var(--zen-on-primary);
+  border-color: transparent;
+  background: var(--acc);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--acc) 25%, transparent);
+}
+
+#app .narrow:has(> .wprog) > .hdr .iconbtn:last-child:active {
+  transform: scale(.90);
+}
+
+/* Session progress — thin but luminous, visually attached to the sticky header. */
+#app .narrow:has(> .wprog) > .wprog {
+  position: relative;
+  height: 9px;
+  margin: 0 3px 18px;
+  overflow: hidden;
+  border: 1px solid var(--wo-outline);
+  border-radius: 999px;
+  background: var(--wo-raised);
+  box-shadow: inset 0 1px 4px rgba(0,0,0,.18);
+}
+
+#app .narrow:has(> .wprog) > .wprog i {
+  position: relative;
+  display: block;
+  min-width: 8px;
+  border-radius: inherit;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--acc) 78%, white),
+    var(--acc));
+  box-shadow: 0 0 22px color-mix(in srgb, var(--acc) 44%, transparent);
+}
+
+#app .narrow:has(> .wprog) > .wprog i::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-72%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.42), transparent);
+  animation: wo-progress-sheen 2.6s ease-in-out infinite;
+}
+
+@keyframes wo-progress-sheen {
+  0%, 54% { transform: translateX(-110%); opacity: 0; }
+  64% { opacity: .7; }
+  100% { transform: translateX(155%); opacity: 0; }
+}
+
+/* Exercise counter above the active movement. */
+#app .narrow:has(> .wprog) > .wprog + .muted.small {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 11px !important;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: var(--zen-text-2);
+  background: var(--wo-raised);
+  border: 1px solid var(--wo-outline);
+  font-size: 11px;
+  font-weight: 680;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+#app .narrow:has(> .wprog) > .wprog + .muted.small::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--acc);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--acc) 65%, transparent);
+}
+
+/* ================================================================
+   EXERCISE HERO
+   ================================================================ */
+#app .narrow:has(> .wprog) .exmedia {
+  position: relative;
+  margin: 0 0 16px;
+  overflow: hidden;
+  border: 1px solid var(--wo-outline);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 50% 15%, color-mix(in srgb, var(--acc) 7%, white), transparent 42%),
+    #fff;
+  box-shadow: 0 24px 65px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.35);
+}
+
+#app .narrow:has(> .wprog) .exmedia::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.25);
+}
+
+#app .narrow:has(> .wprog) .exmedia img {
+  height: clamp(250px, 40vh, 390px);
+  padding: 8px;
+  transition: transform .34s var(--zen-ease-strong);
+}
+
+#app .narrow:has(> .wprog) .exmedia:hover img {
+  transform: scale(1.018);
+}
+
+#app .narrow:has(> .wprog) .exmedia.compact {
+  border-radius: 22px;
+}
+
+#app .narrow:has(> .wprog) .exmedia.compact img {
+  height: 145px;
+}
+
+#app .narrow:has(> .wprog) .exmedia .gifhint,
+#app .narrow:has(> .wprog) .exmedia .giftoggle {
+  z-index: 2;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(10,12,16,.62);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+
+/* Name immediately after media becomes a real exercise title row. */
+#app .narrow:has(> .wprog) .exmedia + .row.between {
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 8px !important;
+  padding: 2px 2px 0;
+}
+
+#app .narrow:has(> .wprog) .exmedia + .row.between > div:first-child {
+  font-size: clamp(25px, 5vw, 34px) !important;
+  font-weight: 790 !important;
+  line-height: 1.02 !important;
+  letter-spacing: -.045em !important;
+}
+
+#app .narrow:has(> .wprog) .exmedia + .row.between .iconbtn {
+  width: 42px;
+  height: 42px;
+  color: var(--zen-text-2);
+  border: 1px solid var(--wo-outline);
+  background: var(--wo-raised);
+}
+
+/* Exercise metadata chips */
+#app .narrow:has(> .wprog) .tag {
+  min-height: 28px;
+  padding: 5px 9px;
+  border: 1px solid var(--wo-outline);
+  border-radius: 999px;
+  color: var(--zen-text-2);
+  background: var(--wo-raised);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: .01em;
+}
+
+#app .narrow:has(> .wprog) .tag.acc {
+  color: color-mix(in srgb, var(--acc) 80%, var(--zen-text));
+  border-color: var(--wo-accent-outline);
+  background: color-mix(in srgb, var(--acc) 11%, var(--wo-raised));
+}
+
+/* Last session hint is important, but secondary. */
+#app .narrow:has(> .wprog) .row + .small.dim,
+#app .narrow:has(> .wprog) .exmedia ~ .small.dim {
+  padding: 9px 11px;
+  border-radius: 12px;
+  color: var(--zen-text-2);
+  background: color-mix(in srgb, var(--zen-surface-low) 70%, transparent);
+}
+
+#app .narrow:has(> .wprog) .progline {
+  margin: 10px 0 12px;
+  padding: 11px 13px;
+  border: 1px solid var(--wo-accent-outline);
+  border-radius: 15px;
+  color: color-mix(in srgb, var(--acc) 78%, var(--zen-text));
+  background: color-mix(in srgb, var(--acc) 9%, var(--wo-surface));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+/* ================================================================
+   SET CONSOLE
+   ================================================================ */
+#app .narrow:has(> .wprog) .card:has(> .sethead) {
+  position: relative;
+  margin-top: 14px !important;
+  padding: 16px 14px 14px;
+  overflow: hidden;
+  border: 1px solid var(--wo-outline);
+  border-radius: 26px;
+  background: var(--wo-surface);
+  box-shadow: 0 18px 52px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+#app .narrow:has(> .wprog) .card:has(> .sethead)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 18px;
+  right: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--acc) 30%, transparent), transparent);
+}
+
+#app .narrow:has(> .wprog) .sethead {
+  gap: 7px;
+  padding: 0 2px 8px;
+  color: var(--zen-text-3);
+  font-size: 9px;
+  font-weight: 760;
+  letter-spacing: .075em;
+}
+
+#app .narrow:has(> .wprog) .setrow {
+  min-height: 60px;
+  gap: 7px;
+  padding: 8px 2px;
+  border-radius: 15px;
+  transition: background var(--zen-fast), transform var(--zen-fast), opacity var(--zen-fast);
+}
+
+#app .narrow:has(> .wprog) .setrow + .setrow::before {
+  left: 8px;
+  right: 8px;
+  background: var(--wo-outline);
+}
+
+#app .narrow:has(> .wprog) .setrow:focus-within {
+  background: color-mix(in srgb, var(--acc) 5%, transparent);
+}
+
+#app .narrow:has(> .wprog) .setrow .n {
+  width: 30px;
+  height: 30px;
+  color: var(--zen-text-2);
+  border: 1px solid var(--wo-outline);
+  background: var(--wo-raised);
+  font-size: 12px;
+  font-weight: 760;
+}
+
+#app .narrow:has(> .wprog) .setrow .stp {
+  min-height: 46px;
+  overflow: hidden;
+  border: 1px solid var(--wo-outline);
+  border-radius: 14px;
+  background: var(--wo-raised);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+
+#app .narrow:has(> .wprog) .setrow .stp button {
+  height: 46px;
+  color: var(--zen-text-2);
+}
+
+#app .narrow:has(> .wprog) .setrow .stp button:hover {
+  color: var(--zen-text);
+  background: var(--wo-strong);
+}
+
+#app .narrow:has(> .wprog) .setrow .stp button:active {
+  transform: scale(.84);
+}
+
+#app .narrow:has(> .wprog) .setrow .stp .num {
+  color: var(--zen-text);
+  font-size: 16px;
+  font-weight: 740;
+  letter-spacing: -.025em;
+}
+
+#app .narrow:has(> .wprog) .chk,
+#app .narrow:has(> .wprog) .ck {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--wo-outline);
+  box-shadow: none;
+  background: var(--wo-raised);
+}
+
+#app .narrow:has(> .wprog) .chk.on,
+#app .narrow:has(> .wprog) .ck.on {
+  color: var(--zen-on-primary);
+  border-color: transparent;
+  background: var(--acc);
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--acc) 26%, transparent);
+}
+
+#app .narrow:has(> .wprog) .setrow.done {
+  opacity: .72;
+  background: color-mix(in srgb, var(--acc) 5%, transparent);
+}
+
+#app .narrow:has(> .wprog) .setrow.done .n {
+  color: var(--zen-on-primary);
+  border-color: transparent;
+  background: var(--acc);
+}
+
+#app .narrow:has(> .wprog) .setrow.done .stp {
+  border-color: color-mix(in srgb, var(--acc) 17%, transparent);
+  background: color-mix(in srgb, var(--acc) 8%, var(--wo-raised));
+}
+
+#app .narrow:has(> .wprog) .setrow .setgo {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--wo-accent-outline);
+  background: color-mix(in srgb, var(--acc) 10%, var(--wo-raised));
+  color: var(--acc);
+}
+
+/* Add/remove set actions become small, balanced console controls. */
+#app .narrow:has(> .wprog) .card:has(> .sethead) > .row:last-child {
+  gap: 8px;
+  padding-top: 2px;
+}
+
+#app .narrow:has(> .wprog) .card:has(> .sethead) > .row:last-child .btn {
+  min-height: 40px;
+  border: 1px solid var(--wo-outline);
+  background: var(--wo-raised);
+}
+
+/* ================================================================
+   SUPERSETS
+   ================================================================ */
+#app .narrow:has(> .wprog) .ss-card {
+  overflow: hidden;
+  border: 1px solid var(--wo-accent-outline);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--acc) 6%, transparent), transparent 130px),
+    var(--wo-surface);
+  box-shadow: 0 22px 58px rgba(0,0,0,.17);
+}
+
+#app .narrow:has(> .wprog) .ss-hd {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--wo-outline);
+  color: color-mix(in srgb, var(--acc) 84%, var(--zen-text));
+  background: color-mix(in srgb, var(--acc) 7%, transparent);
+  font-size: 11px;
+  font-weight: 720;
+  letter-spacing: .025em;
+}
+
+#app .narrow:has(> .wprog) .ss-ex {
+  padding: 16px;
+}
+
+#app .narrow:has(> .wprog) .ss-amp {
+  width: 42px;
+  height: 42px;
+  margin: 2px auto 13px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--wo-accent-outline);
+  border-radius: 999px;
+  color: var(--acc);
+  background: var(--wo-raised);
+  font-size: 20px;
+  font-weight: 760;
+}
+
+/* ================================================================
+   BOTTOM WORKOUT ACTIONS
+   ================================================================ */
+#app .narrow:has(> .wprog) > .row:has(> .btn) {
+  gap: 10px;
+  margin-top: 12px;
+}
+
+#app .narrow:has(> .wprog) > .row:has(> .btn) > .btn {
+  min-height: 50px;
+  border: 1px solid var(--wo-outline);
+  border-radius: 17px;
+  background: var(--wo-raised);
+  font-weight: 680;
+}
+
+#app .narrow:has(> .wprog) > .row:has(> .btn) + div + .btn {
+  min-height: 50px;
+  border: 1px dashed var(--wo-outline);
+  border-radius: 17px;
+  background: color-mix(in srgb, var(--zen-surface-low) 64%, transparent);
+}
+
+#app .narrow:has(> .wprog) > button.btn:last-of-type {
+  min-height: 54px;
+  margin-top: 2px;
+  border-radius: 18px;
+  font-weight: 720;
+}
+
+#app .narrow:has(> .wprog) > button.btn.primary:last-of-type {
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--acc) 24%, transparent);
+}
+
+/* ================================================================
+   REST / WORK TIMER — part of the active workout instead of an alien card
+   ================================================================ */
+body:has(#app .narrow > .wprog) #timer {
+  width: min(calc(100% - 24px), 620px);
+  padding: 13px 15px;
+  border: 1px solid color-mix(in srgb, var(--acc) 20%, var(--zen-outline));
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--zen-surface-low) 92%, transparent);
+  box-shadow: 0 24px 70px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+body:has(#app .narrow > .wprog) #timer .t {
+  font-size: 30px;
+  font-weight: 780;
+  letter-spacing: -.045em;
+}
+
+body:has(#app .narrow > .wprog) #timer .bar {
+  height: 7px;
+  border-radius: 999px;
+  background: var(--wo-raised, var(--zen-surface-high));
+}
+
+body:has(#app .narrow > .wprog) #timer .bar i {
+  border-radius: inherit;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--acc) 32%, transparent);
+}
+
+/* ================================================================
+   START WORKOUT CHOOSER
+   The chooser has a header followed directly by the highlighted today's-plan card.
+   ================================================================ */
+#app .narrow > .hdr + .card {
+  position: relative;
+  overflow: hidden;
+}
+
+#app .narrow > .hdr + .card[style] {
+  padding: 24px;
+  border: 1px solid color-mix(in srgb, var(--acc) 24%, transparent) !important;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 92% 8%, color-mix(in srgb, var(--acc) 19%, transparent), transparent 34%),
+    linear-gradient(145deg, color-mix(in srgb, var(--acc) 7%, var(--zen-surface-low)), var(--zen-surface-low));
+  box-shadow: 0 24px 66px rgba(0,0,0,.18);
+}
+
+#app .narrow > .hdr + .card[style] .big {
+  font-size: clamp(30px, 6vw, 42px) !important;
+  font-weight: 790;
+  letter-spacing: -.05em;
+}
+
+#app .narrow > .hdr + .card[style] .lrow-i {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 18px !important;
+  font-size: 27px !important;
+  color: var(--zen-on-primary);
+  background: var(--acc);
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--acc) 26%, transparent);
+}
+
+#app .narrow > .hdr + .card[style] .btn.primary {
+  min-height: 54px;
+  margin-top: 4px;
+  border-radius: 18px;
+  font-size: 16px;
+  font-weight: 730;
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--acc) 24%, transparent);
+}
+
+/* Other routines are more visual but stay compact. */
+#app .narrow > h4.sec + .list .item {
+  min-height: 72px;
+  padding: 12px 14px;
+  border-radius: 20px;
+}
+
+#app .narrow > h4.sec + .list .item .lrow-i {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (min-width: 760px) {
+  #app .narrow:has(> .wprog) .card:has(> .sethead) {
+    padding: 18px 18px 16px;
+  }
+
+  #app .narrow:has(> .wprog) .setrow {
+    min-height: 64px;
+    gap: 10px;
+  }
+
+  #app .narrow:has(> .wprog) .setrow .stp button {
+    width: 38px;
+  }
+}
+
+@media (max-width: 560px) {
+  #app .narrow:has(> .wprog) > .hdr {
+    grid-template-columns: 42px minmax(0, 1fr) 42px;
+    gap: 8px;
+    margin-inline: -5px;
+    padding: 8px 9px;
+    border-radius: 19px;
+  }
+
+  #app .narrow:has(> .wprog) > .hdr .iconbtn {
+    width: 38px;
+    height: 38px;
+  }
+
+  #app .narrow:has(> .wprog) .exmedia {
+    border-radius: 24px;
+  }
+
+  #app .narrow:has(> .wprog) .exmedia img {
+    height: min(300px, 38vh);
+  }
+
+  #app .narrow:has(> .wprog) .card:has(> .sethead) {
+    margin-inline: -5px;
+    padding: 13px 8px 12px;
+    border-radius: 22px;
+  }
+
+  #app .narrow:has(> .wprog) .sethead,
+  #app .narrow:has(> .wprog) .setrow {
+    gap: 5px;
+  }
+
+  #app .narrow:has(> .wprog) .setrow {
+    min-height: 57px;
+  }
+
+  #app .narrow:has(> .wprog) .setrow .n {
+    width: 27px;
+    height: 27px;
+    font-size: 11px;
+  }
+
+  #app .narrow:has(> .wprog) .setrow .stp {
+    min-height: 43px;
+  }
+
+  #app .narrow:has(> .wprog) .setrow .stp button {
+    width: 27px;
+    height: 43px;
+  }
+
+  #app .narrow:has(> .wprog) .setrow.eff3 .stp button {
+    width: 20px;
+  }
+
+  #app .narrow:has(> .wprog) .setrow .stp .num {
+    font-size: 14px;
+  }
+
+  #app .narrow:has(> .wprog) .chk,
+  #app .narrow:has(> .wprog) .ck,
+  #app .narrow:has(> .wprog) .setrow .setgo {
+    width: 32px;
+    height: 32px;
+  }
+
+  #app .narrow:has(> .wprog) > .row:has(> .btn) {
+    gap: 7px;
+  }
+
+  #app .narrow:has(> .wprog) > .row:has(> .btn) > .btn {
+    min-height: 47px;
+    padding-inline: 10px;
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #app .narrow:has(> .wprog) > .wprog i::after {
+    animation: none;
+  }
+}
